@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ojo de Dios · Velorian</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="stylesheet" href="/cesium/Widgets/widgets.css" />
+  <link rel="stylesheet" href="/src/velorian/velorian.css" />
+</head>
+<body>
+  <!-- El único elemento que se queda de God's Eye View: el globo. -->
+  <div id="world">
+    <div id="cesiumContainer"></div>
+    <div id="world-overlay-root"><canvas id="world-overlay-canvas"></canvas></div>
+  </div>
+
+  <!-- Hero de arranque (Kingston › Hero Animations #9, adaptado) -->
+  <div id="v-hero">
+    <div class="v-hero-grid"></div>
+    <div class="v-counter-wrap">
+      <div class="v-counter">000</div>
+      <div class="v-counter-label">INICIALIZANDO OJO DE DIOS</div>
+    </div>
+    <div class="v-progress-bar"><div class="v-progress"></div></div>
+    <div class="v-hero-foot">
+      <span>VELORIAN INDUSTRIES</span>
+      <!-- Contrato del motor: #loading-screen .loader-status — el estado real
+           del arranque de Cesium se lee aquí, en el pie del hero. -->
+      <span id="loading-screen"><span class="loader-status">Cargando motor…</span></span>
+      <span>SALTILLO · COAH · MX</span>
+    </div>
+  </div>
+
+  <!-- HUD Velorian -->
+  <header class="v-hud v-top" data-parallax="4">
+    <div class="v-brand">
+      <span class="v-brand-mark"></span>
+      <h1 class="v-title">OJO DE DIOS</h1>
+    </div>
+    <div class="v-tags">
+      <p class="v-tag">Velorian Industries</p>
+      <p class="v-tag">Vigilancia orbital abierta</p>
+    </div>
+    <div class="v-status">
+      <span id="v-jarvis-dot" class="v-dot"></span>
+      <span id="v-jarvis-label">JARVIS</span>
+      <span class="v-sep"></span>
+      <span id="v-layer-count">0/0</span>
+      <span class="v-status-sub">CAPAS</span>
+    </div>
+  </header>
+
+  <div class="v-hud v-corner v-corner-tl" data-parallax="8"></div>
+  <div class="v-hud v-corner v-corner-tr" data-parallax="8"></div>
+  <div class="v-hud v-corner v-corner-bl" data-parallax="8"></div>
+  <div class="v-hud v-corner v-corner-br" data-parallax="8"></div>
+
+  <!-- Panel de capas — contrato: #data-panel + #data-toggles -->
+  <aside id="data-panel" class="v-hud v-card collapsed" data-parallax="5">
+    <div class="v-card-glow"></div>
+    <div class="v-card-head">
+      <span class="v-card-title">CAPAS DE DATOS</span>
+      <span class="v-card-kicker">EN VIVO</span>
+    </div>
+    <div id="data-toggles"></div>
+  </aside>
+
+  <!-- Dock inferior -->
+  <nav class="v-hud v-dock" data-parallax="3" aria-label="Controles">
+    <div class="v-card-glow"></div>
+    <button id="v-btn-layers" class="v-dock-btn" title="Capas de datos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 16 9 5 9-5"/></svg>
+    </button>
+    <button id="v-btn-globe" class="v-dock-btn" title="Vista global">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 2.6 14.6 0 17M12 3.5c-2.6 2.4-2.6 14.6 0 17"/></svg>
+    </button>
+    <span class="v-dock-sep"></span>
+    <span class="v-dock-hint">Diga <em>"Jarvis, vuela a…"</em></span>
+  </nav>
+
+  <!-- Retícula (Kingston › Mouse Effects #10, adaptado) -->
+  <div id="v-reticle" aria-hidden="true">
+    <span class="v-ret-ring"></span>
+    <span class="v-ret-dot"></span>
+  </div>
+
+  <script src="/vendor-gsap.min.js"></script>
+  <script type="module" src="/src/velorian/main.js"></script>
+</body>
+</html>

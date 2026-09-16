@@ -1,6 +1,7 @@
 import { SceneDirector } from '../scenes/director.js';
 import { initAnnotations } from '../annotations/index.js';
-import { initGevVoiceCommands } from '../voice/gevRealtime.js';
+import { createGevActionRunner } from '../voice/gevActions.js';
+import { connectJarvisBridge } from '../voice/jarvisBridge.js';
 import { installScopeMask, destroyScopeMask } from '../scopeMask.js';
 import {
   installRenderGovernor,
@@ -101,21 +102,28 @@ export function createApplicationTools({
   defer(() => {
     if (window.__godsEyeView === debug) delete window.__godsEyeView;
   });
-  const voiceCommands = initGevVoiceCommands({
-    ...voice,
-    signal,
-    placeSearch,
+  // Voz nativa de GEV cortada (15 sep 2026, pedido del Señor: "desde 0,
+  // estilo Velorian" — la voz siempre fue Jarvis, nunca OpenAI). Se expone
+  // el runner de las 28 acciones directo, sin el aparato de UI/costo/mic
+  // de GEV (initGevVoiceCommands exigía #gev-voice-button etc. — ver
+  // src/voice/control.js). jarvisBridge.js sigue encontrándolo en el
+  // mismo lugar de siempre, sin cambios de su lado.
+  const runner = createGevActionRunner({
     viewer,
     styleManager,
     dataManager,
     sceneDirector,
     annotations,
+    placeSearch,
   });
+  window.__gevVoiceCommands = { runner };
   defer(() => {
-    voiceCommands.stop({ removeUi: true });
-    if (window.__gevVoiceCommands === voiceCommands)
+    if (window.__gevVoiceCommands?.runner === runner)
       delete window.__gevVoiceCommands;
   });
-  debug.voiceCommands = voiceCommands;
-  return { sceneDirector, annotations, voiceCommands };
+  const jarvisBridge = connectJarvisBridge({
+    getRunner: () => window.__gevVoiceCommands?.runner,
+  });
+  defer(() => jarvisBridge.stop());
+  return { sceneDirector, annotations };
 }

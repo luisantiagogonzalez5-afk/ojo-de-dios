@@ -22,11 +22,10 @@ test('explicit build inputs preserve browser-only defines, plugin order and loop
   ]);
   assert.ok(config.server.fs.deny.includes('**/ENVIRONMENT'));
   assert.ok(config.server.fs.deny.includes('.env.*'));
-  assert.equal(config.server.headers['X-Frame-Options'], 'DENY');
-  assert.equal(
-    config.server.headers['Content-Security-Policy'],
-    "frame-ancestors 'none'",
-  );
+  // Anti-framing headers were removed from server.headers (14 sep 2026) —
+  // they blocked embedding the app in any legitimate iframe dev-server-wide.
+  // Provider Settings' own responses still set them (see key-setup test).
+  assert.equal(config.server.headers, undefined);
   assert.deepEqual(config.define, {
     'import.meta.env.GOOGLE_MAPS_API_KEY': '"browser-fixture"',
     'import.meta.env.CESIUM_ION_TOKEN': '"ion-fixture"',

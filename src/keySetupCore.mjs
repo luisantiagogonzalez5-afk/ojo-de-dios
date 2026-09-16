@@ -54,6 +54,12 @@ export const KEY_SETUP_KEYS = Object.freeze([
     getUrl: 'https://platform.openai.com/api-keys',
     envVars: Object.freeze(['OPENAI_API_KEY']),
     tier: 'metered',
+    // Oculto de Provider Settings (15 sep 2026, pedido del Señor): la voz de
+    // este globo es Jarvis (wake word + Whisper + cascada de cerebros +
+    // Cartesia), nunca OpenAI — no hay llave que pedir aquí. El env var
+    // sigue siendo válido (mismo patrón que google-maps-server arriba) para
+    // no romper la validación existente si algún día se usa otra cosa.
+    hidden: true,
   }),
   Object.freeze({
     id: 'aisstream',

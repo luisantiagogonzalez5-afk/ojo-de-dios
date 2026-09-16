@@ -78,8 +78,11 @@ test('the status payload reports presence without any credential material', () =
 });
 
 test('whitespace-only env values do not count as configured', () => {
-  const status = keySetupStatus({ OPENAI_API_KEY: '   ' });
-  assert.equal(status.keys.find((key) => key.id === 'openai').set, false);
+  // 'openai' is hidden from status.keys (15 sep 2026) — 'aisstream' is the
+  // same single-env-var shape and stays visible, so it still exercises this
+  // whitespace-handling path end-to-end.
+  const status = keySetupStatus({ AISSTREAM_API_KEY: '   ' });
+  assert.equal(status.keys.find((key) => key.id === 'aisstream').set, false);
 });
 
 test('subprocess success requires a clean zero exit', () => {

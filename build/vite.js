@@ -23,11 +23,11 @@ export function createBrowserViteConfig({
       fs: {
         deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/ENVIRONMENT'],
       },
-      // These headers protect the document containing Provider Settings.
-      headers: {
-        'X-Frame-Options': 'DENY',
-        'Content-Security-Policy': "frame-ancestors 'none'",
-      },
+      // Provider Settings' own anti-framing headers already live scoped
+      // correctly on its actual responses (server/standalone/key-setup.js,
+      // respond()) — putting them here too applied them dev-server-wide,
+      // which blocked embedding the app itself in ANY legitimate iframe
+      // (e.g. a desktop shell hosting this app). Removed 14 sep 2026.
     },
     define: {
       'import.meta.env.GOOGLE_MAPS_API_KEY': JSON.stringify(googleApiKey),

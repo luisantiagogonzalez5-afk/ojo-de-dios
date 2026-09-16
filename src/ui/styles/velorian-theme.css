@@ -1,0 +1,77 @@
+/*
+ * Velorian theme override (15 sep 2026, pedido del Señor: "arreglalo al
+ * estilo velorian"). Cada componente de GEV ya usa las variables CSS de
+ * foundation.css (var(--accent), var(--glass-bg), etc.) — cero color fijo
+ * fuera de foundation.css (confirmado por grep). Redefinir esas variables
+ * aquí retema TODO el sistema (CCTV, command-dock, presets, radio, cockpit,
+ * layers…) sin tocar un solo componente. Se importa AL FINAL de style.css
+ * para ganar por orden de cascada, sin necesitar !important en cada regla.
+ *
+ * Paleta tomada de interface/jarvis_ui.html (el mismo lenguaje visual del
+ * núcleo de Jarvis): azul #1A7BFF, fondo casi negro #050608, vidrio sutil,
+ * texto #F4F4F4, Inter para sans (GEV ya usa Inter — sin cambio ahí).
+ */
+:root {
+  --bg-dark: #050608;
+  --glass-bg: rgba(10, 12, 16, 0.68);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-border-hover: rgba(255, 255, 255, 0.16);
+  --accent: #1a7bff;
+  --accent-dim: rgba(26, 123, 255, 0.15);
+  --accent-glow: rgba(26, 123, 255, 0.4);
+  --text-primary: #f4f4f4;
+  --text-secondary: rgba(244, 244, 244, 0.55);
+  --text-dim: rgba(244, 244, 244, 0.3);
+}
+
+/*
+ * Utilidades "glass" de Jarvis (15 sep 2026) — el mismo recurso visual de
+ * interface/jarvis_ui.html, portado tal cual: barrido de brillo diagonal +
+ * resplandor radial que sigue al cursor. Puro CSS, cero cambio de HTML —
+ * se agregan como reglas nuevas sobre selectores que YA existen en los
+ * paneles de GEV (ver comentario de cada aplicación en command-dock.css /
+ * cctv.css), así que shellElements.js no pierde ningún id que necesite.
+ */
+@keyframes velorianSheen {
+  0% { transform: translateX(-160%) skewX(-16deg); }
+  46% { transform: translateX(320%) skewX(-16deg); }
+  100% { transform: translateX(320%) skewX(-16deg); }
+}
+/* Aplicado directo a selectores que YA existen en command-dock.css /
+   cctv.css — cero cambio de HTML, ningún id se toca ni se pierde. */
+#command-dock,
+#cctv-panel .cctv-panel-inner,
+#gev-voice-control {
+  position: relative;
+  overflow: hidden;
+}
+#command-dock::after,
+#cctv-panel .cctv-panel-inner::after,
+#gev-voice-control::after {
+  content: '';
+  position: absolute;
+  top: -55%;
+  left: 0;
+  width: 46%;
+  height: 210%;
+  background: linear-gradient(
+    100deg,
+    transparent 10%,
+    rgba(255, 255, 255, 0.07) 44%,
+    rgba(190, 225, 255, 0.1) 51%,
+    transparent 90%
+  );
+  animation: velorianSheen 11s cubic-bezier(0.6, 0.05, 0.25, 0.95) infinite;
+  pointer-events: none;
+}
+#cctv-panel .cctv-panel-inner::after { animation-delay: 3.6s; }
+#gev-voice-control::after { animation-delay: 7.2s; }
+
+/* Esquinas más redondas (estilo Velorian: 24-28px, no los 12px de GEV). */
+#command-dock,
+#gev-voice-control {
+  border-radius: 24px !important;
+}
+#cctv-panel .cctv-panel-inner {
+  border-radius: 22px;
+}
