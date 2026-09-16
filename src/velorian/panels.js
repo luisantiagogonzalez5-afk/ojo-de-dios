@@ -1,12 +1,4 @@
-/**
- * Paneles de la interfaz Velorian — fase 0: el panel de capas (15 sep 2026).
- *
- * El motor ya pinta las filas dentro de #data-toggles (src/app/data.js:78 →
- * DataLayerManager.buildTogglePanel) con el contrato que las acciones de voz
- * esperan (filas [data-layer-id], .data-name, resalte .gev-voice-focus). Aquí
- * solo se controla la tarjeta que las contiene, el botón del dock y la
- * píldora de estado. Las filas se rediseñan en la fase 1.
- */
+/** Tarjeta de capas, dock y estado del puente Jarvis. Filas en layerPanel.js. */
 export function mountLayersPanel({ shell, dataManager, signal }) {
   const panel = document.getElementById('data-panel');
   const button = document.getElementById('v-btn-layers');

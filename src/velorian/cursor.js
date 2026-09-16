@@ -24,7 +24,7 @@ export function installCursor() {
 
   const onResize = () => { win = { w: window.innerWidth, h: window.innerHeight }; };
   const onMove = (e) => { cur = { x: e.clientX, y: e.clientY }; };
-  const onOver = (e) => { hot = Boolean(e.target.closest('button, a, [role="button"], .data-toggle-row')); };
+  const onOver = (e) => { hot = Boolean(e.target.closest('button, a, [role="button"], .v-lp-row')); };
   const onDown = () => ret.classList.add('is-down');
   const onUp = () => ret.classList.remove('is-down');
 

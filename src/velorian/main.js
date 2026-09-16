@@ -22,6 +22,7 @@ import { VelorianShell } from './shell.js';
 import { createHero } from './hero.js';
 import { installCursor } from './cursor.js';
 import { mountLayersPanel } from './panels.js';
+import { installVelorianLayerPanel } from './layerPanel.js';
 
 const hero = createHero();
 const loadingScreen = document.getElementById('loading-screen');
@@ -57,7 +58,14 @@ const application = createApplication({
   createControls: (context) =>
     createApplicationControls({ ...context, loaderStatus, placeSearch, Controls: VelorianShell }),
   createData: (context) =>
-    createApplicationData({ ...context, allowQaRegistration: import.meta.env.DEV }),
+    createApplicationData({
+      ...context,
+      allowQaRegistration: import.meta.env.DEV,
+      onData: (dataManager) => {
+        installVelorianLayerPanel(dataManager);
+        context.onData?.(dataManager);
+      },
+    }),
   createTools: (context) =>
     createApplicationTools({
       ...context,
