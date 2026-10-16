@@ -66,6 +66,28 @@
     <div id="data-toggles"></div>
   </aside>
 
+  <!-- Tarjeta de estilo — contrato: #control-panel (set_panel_open) -->
+  <aside id="control-panel" class="v-hud v-card collapsed" data-parallax="5">
+    <div class="v-card-glow"></div>
+    <div class="v-card-head">
+      <span class="v-card-title">ESTILO VISUAL</span>
+      <span class="v-card-kicker">ÓPTICA</span>
+    </div>
+    <div id="v-vs-pills" class="v-vs-pills" role="group" aria-label="Estilo visual"></div>
+    <div class="v-vs-sliders">
+      <label class="v-vs-slider">
+        <span class="v-vs-label">BLOOM</span>
+        <input id="v-vs-bloom" type="range" min="0" max="200" step="1" value="0" />
+        <span id="v-vs-bloom-value" class="v-vs-value">OFF</span>
+      </label>
+      <label class="v-vs-slider">
+        <span class="v-vs-label">NITIDEZ</span>
+        <input id="v-vs-sharpen" type="range" min="0" max="100" step="1" value="0" />
+        <span id="v-vs-sharpen-value" class="v-vs-value">OFF</span>
+      </label>
+    </div>
+  </aside>
+
   <!-- Dock inferior -->
   <nav class="v-hud v-dock" data-parallax="3" aria-label="Controles">
     <div class="v-card-glow"></div>
@@ -74,6 +96,9 @@
     </button>
     <button id="v-btn-globe" class="v-dock-btn" title="Vista global">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 2.6 14.6 0 17M12 3.5c-2.6 2.4-2.6 14.6 0 17"/></svg>
+    </button>
+    <button id="v-btn-style" class="v-dock-btn" title="Estilo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><path d="M12 3.5v4.5M20.5 12H16M12 20.5V16M3.5 12H8"/></svg>
     </button>
     <span class="v-dock-sep"></span>
     <span class="v-dock-hint">Diga <em>"Jarvis, vuela a…"</em></span>

@@ -6,15 +6,21 @@
  * (Cesium, capas, las 28 acciones de src/voice/gevActions.js) sigue intacto:
  * todo lo que ese motor pide al shell está aquí, con nuestro DOM o con un
  * fallback honesto. Las acciones cuya función todavía no existe en esta
- * interfaz (estilos visuales, cabina, contexto, detección) regresan
+ * interfaz (cabina, contexto, detección) regresan
  * `{ ok: false, reason }` — jarvisBridge lo convierte en gev_error y Jarvis
  * le dice al Señor "no pude", en vez de reventar en silencio.
  *
  * Contrato que sí cumple (usado por el motor y por gevActions.js):
  *   hasShareState, initialRestorePromise, orbitController.stop, hud.destroy,
  *   dispose, attachDataManager, activeStyle, setPanelCollapsed,
- *   getControlState, getContextModeState, getCockpitState, getDetectionState.
+ *   getControlState, getContextModeState, getCockpitState, getDetectionState,
+ *   setStyle, setBloom, setSharpen (motor real vía ./visual.js).
+ *
+ * El shell crea su propio objeto visual en el constructor (lo más simple:
+ * controls.js ya le pasa el viewer y no hay que tocar src/app/). `visual` en
+ * las opciones solo existe para inyectar un doble en pruebas.
  */
+import { createVelorianVisual } from './visual.js';
 
 // Ids de panel que el modelo puede pedir con set_panel_open (gevActions.js:29-54).
 const PANEL_IDS = new Set([
@@ -23,19 +29,23 @@ const PANEL_IDS = new Set([
 ]);
 
 export class VelorianShell {
-  constructor(viewer, { services = {}, mapStackController = null, placeSearch = null } = {}) {
+  constructor(viewer, { services = {}, mapStackController = null, placeSearch = null, visual = null } = {}) {
     this.viewer = viewer;
     this.services = services;
     this.mapStackController = mapStackController;
     this.placeSearch = placeSearch;
     this._dataManager = null;
-    this.activeStyle = 'normal';
+    this.visual = visual || createVelorianVisual({ viewer });
     this.hasShareState = false;
     this.initialRestorePromise = Promise.resolve();
     // Sustitutos mínimos de lo que controls.js/tools.js desmontan al salir.
     this.orbitController = { stop() {} };
     this.hud = { visible: false, destroy() {}, getVariant: () => null };
     this._listeners = new Set();
+  }
+
+  get activeStyle() {
+    return this.visual.getStyle();
   }
 
   attachDataManager(dataManager) {
@@ -76,15 +86,25 @@ export class VelorianShell {
 
   // ---- estado que las acciones leen para narrar --------------------------
   getControlState() {
+    const { style, bloom, sharpen } = this.visual.getState();
     return {
-      style: this.activeStyle,
+      style,
       mapStack: this.mapStackController?.getActiveId?.() || null,
       hud: { visible: false, layout: null },
       detection: this.getDetectionState(),
-      bloom: { enabled: false, intensityPct: 0 },
-      sharpen: { enabled: false, intensityPct: 0 },
+      bloom,
+      sharpen,
     };
   }
+
+  // ---- estilos visuales (set_visual_style / set_post_processing) ---------
+  _applyVisual(result) {
+    if (result.ok) this._emit();
+    return result;
+  }
+  setStyle(style) { return this._applyVisual(this.visual.setStyle(style)); }
+  setBloom(options) { return this._applyVisual(this.visual.setBloom(options)); }
+  setSharpen(options) { return this._applyVisual(this.visual.setSharpen(options)); }
 
   getContextModeState() {
     // La interfaz Velorian arranca en modo normal; el modo contexto (panel
@@ -110,9 +130,6 @@ export class VelorianShell {
   _pendiente(nombre) {
     return { ok: false, reason: `${nombre} aún no existe en la interfaz Velorian` };
   }
-  setStyle() { return this._pendiente('set_visual_style'); }
-  setBloom() { return this._pendiente('set_post_processing'); }
-  setSharpen() { return this._pendiente('set_post_processing'); }
   setMapStack() { return this._pendiente('set_map_stack'); }
   setHudVisible() { return this._pendiente('set_hud'); }
   setHudLayout() { return this._pendiente('set_hud'); }
@@ -122,5 +139,6 @@ export class VelorianShell {
 
   dispose() {
     this._listeners.clear();
+    this.visual.destroy();
   }
 }

@@ -22,6 +22,7 @@ import { VelorianShell } from './shell.js';
 import { createHero } from './hero.js';
 import { installCursor } from './cursor.js';
 import { mountLayersPanel } from './panels.js';
+import { mountStylePanel } from './stylePanel.js';
 import { installVelorianLayerPanel } from './layerPanel.js';
 
 const hero = createHero();
@@ -35,6 +36,7 @@ let shell;
 function startVelorianChrome({ styleManager, dataManager, signal }) {
   shell = styleManager;
   mountLayersPanel({ shell, dataManager, signal });
+  mountStylePanel({ shell, signal });
   hero.markEngineReady();
   void hero.reveal().then(() => {
     if (!signal.aborted) console.log('[OJO DE DIOS] interfaz Velorian lista.');
